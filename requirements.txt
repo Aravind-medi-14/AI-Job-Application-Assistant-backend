@@ -1,0 +1,8 @@
+flask
+google-generativeai
+google-adk
+python-dotenv
+pytesseract
+pdf2image
+flask_cors
+json
