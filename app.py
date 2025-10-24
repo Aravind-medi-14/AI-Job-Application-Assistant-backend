@@ -17,7 +17,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 # Flask app
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, origins=["https://ai-powered-job-application-assistant.netlify.app/"])
 
 
 def extract_text_from_pdf(file):
