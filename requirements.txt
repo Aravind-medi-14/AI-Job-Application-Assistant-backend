@@ -2,6 +2,7 @@ flask
 google-generativeai
 google-adk
 python-dotenv
+PyPDF2
 pytesseract
 pdf2image
 flask_cors
