@@ -17,8 +17,16 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 # Flask app
 app = Flask(__name__)
 
-frontend_url = "https://ai-powered-job-application-assistant.netlify.app"
-CORS(app, resources={r"/*": {"origins": frontend_url}})
+CORS(
+    app,
+    resources={r"/*": {
+        "origins": [
+            "http://localhost:5173",
+            "https://ai-powered-job-application-assistant.netlify.app"
+        ]
+    }}
+)
+
 
 
 def extract_text_from_pdf(file):
@@ -54,7 +62,7 @@ def extract_text_from_pdf(file):
 # Define AI Agent (optional, not directly used here)
 agent = adk.Agent(
     name="job_assisstant_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description="Helps analyze resumes, job descriptions, and generates AI-powered cover letters"
 )
 
@@ -62,14 +70,14 @@ agent = adk.Agent(
 
 def resume_parser(file_text: str) -> dict:
     """Extract key details from resume text."""
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(f"Extract skills, experience, education:\n\n{file_text}")
     return {"parsed_resume": response.text}
 
 
 def jd_analyzer(text: str) -> dict:
     """Analyze job description text."""
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(f"Extract job role and required skills:\n\n{text}")
     return {"jd_analysis": response.text}
 
@@ -77,7 +85,7 @@ def jd_analyzer(text: str) -> dict:
 def matcher(resume: dict, jd: dict) -> dict:
     """Match resume with JD and return structured JSON."""
     import json
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
 
     jd_text = jd.get("jd_analysis", "")
     resume_text = resume.get("parsed_resume", "")
@@ -126,7 +134,7 @@ def matcher(resume: dict, jd: dict) -> dict:
 
 def cover_letter_generator(resume: dict, jd: dict) -> str:
     """Generate cover letter."""
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(
         f"Write a 250-word professional cover letter.\n\nResume: {resume}\n\nJob Description: {jd}"
     )
